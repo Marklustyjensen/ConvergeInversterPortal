@@ -146,6 +146,27 @@ textarea:focus {
   outline-offset: 2px;
 }
 
+/* Layout containers for responsive design */
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3%;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .app-container {
+    padding: 0 2%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    padding: 0 1%;
+  }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
