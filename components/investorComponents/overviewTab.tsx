@@ -40,12 +40,12 @@ interface Document {
 }
 
 interface ActivityMessage extends Message {
-  activityType: 'message';
+  activityType: "message";
   activityDate: Date;
 }
 
 interface ActivityDocument extends Document {
-  activityType: 'document';
+  activityType: "document";
   activityDate: Date;
 }
 
@@ -75,16 +75,16 @@ export default function OverviewTab() {
         // Fetch recent messages and documents
         const messagesResponse = await fetch("/api/messages");
         const documentsResponse = await fetch("/api/documents");
-        
+
         const allActivity: ActivityItem[] = [];
-        
+
         if (messagesResponse.ok) {
           const messagesData = await messagesResponse.json();
           messagesData.forEach((message: Message) => {
             allActivity.push({
               ...message,
-              activityType: 'message' as const,
-              activityDate: new Date(message.sentDate)
+              activityType: "message" as const,
+              activityDate: new Date(message.sentDate),
             });
           });
         }
@@ -94,19 +94,29 @@ export default function OverviewTab() {
           documentsData.forEach((document: Document) => {
             allActivity.push({
               ...document,
-              activityType: 'document' as const,
-              activityDate: new Date(document.uploadDate)
+              activityType: "document" as const,
+              activityDate: new Date(document.uploadDate),
             });
           });
         }
 
         // Sort all activity by date (most recent first) and take top 5
-        allActivity.sort((a, b) => b.activityDate.getTime() - a.activityDate.getTime());
+        allActivity.sort(
+          (a, b) => b.activityDate.getTime() - a.activityDate.getTime()
+        );
         const recentActivity = allActivity.slice(0, 5);
-        
+
         // Separate back into messages and documents for display
-        setRecentMessages(recentActivity.filter((item): item is ActivityMessage => item.activityType === 'message'));
-        setRecentDocuments(recentActivity.filter((item): item is ActivityDocument => item.activityType === 'document'));
+        setRecentMessages(
+          recentActivity.filter(
+            (item): item is ActivityMessage => item.activityType === "message"
+          )
+        );
+        setRecentDocuments(
+          recentActivity.filter(
+            (item): item is ActivityDocument => item.activityType === "document"
+          )
+        );
       } catch (err) {
         setError("Failed to load data");
         console.error("Error fetching data:", err);
@@ -120,12 +130,12 @@ export default function OverviewTab() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="luxury-card p-8">
+      <div className="luxury-card p-4 md:p-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-slate-800 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
             Welcome to Your Investment Portal
           </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto">
             Monitor your hospitality investments, track performance, and access
             all your financial documents in one secure location. Your portfolio
             is professionally managed by the Converge Hospitality team.
@@ -134,8 +144,8 @@ export default function OverviewTab() {
       </div>
 
       {/* Properties Section */}
-      <div className="luxury-card p-8">
-        <h3 className="text-2xl font-bold text-slate-800 mb-6">
+      <div className="luxury-card p-4 md:p-8">
+        <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6">
           Your Hotel Properties
         </h3>
         {loading ? (
@@ -151,7 +161,7 @@ export default function OverviewTab() {
             <p className="text-slate-600">No properties found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {properties.map((property: Property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
@@ -160,8 +170,8 @@ export default function OverviewTab() {
       </div>
 
       {/* Recent Activity */}
-      <div className="luxury-card p-8">
-        <h3 className="text-2xl font-bold text-slate-800 mb-6">
+      <div className="luxury-card p-4 md:p-8">
+        <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6">
           Recent Activity
         </h3>
 

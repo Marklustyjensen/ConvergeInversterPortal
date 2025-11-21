@@ -17,7 +17,39 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     <>
       <Link href="#" className="block">
         <div className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-          <div className="flex h-40">
+          {/* Mobile Layout - Vertical Stack */}
+          <div className="block md:hidden">
+            {/* Property Image - Full Width on Mobile */}
+            <div className="w-full h-48 overflow-hidden">
+              <Image
+                src={imageUrl}
+                alt={property?.name || "Property Image"}
+                width={400}
+                height={200}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Property Details - Full Width on Mobile */}
+            <div className="p-4">
+              <h4 className="text-lg font-semibold text-slate-800 mb-2">
+                {property?.name || "Property Name Placeholder"}
+              </h4>
+              <div className="space-y-1 text-slate-600">
+                <p className="text-sm">
+                  {property?.address || "123 Main Street"}
+                </p>
+                <p className="text-sm">
+                  {property?.city && property?.state && property?.zip
+                    ? `${property.city}, ${property.state} ${property.zip}`
+                    : "City, State 12345"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout - Horizontal */}
+          <div className="hidden md:flex h-40">
             {/* Property Image */}
             <div className="w-48 flex-shrink-0 rounded-xl overflow-hidden">
               <Image
