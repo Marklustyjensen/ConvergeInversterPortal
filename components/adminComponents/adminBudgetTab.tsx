@@ -41,7 +41,7 @@ export default function AdminBudgetTab() {
   const [uploadModalData, setUploadModalData] = useState<UploadModalData>({
     propertyId: "",
     year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
+    month: 1, // Default to January for yearly budgets
     documentType: "budget",
   });
 
@@ -126,7 +126,7 @@ export default function AdminBudgetTab() {
         setUploadModalData({
           propertyId: "",
           year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1,
+          month: 1, // Default to January for yearly budgets
           documentType: "budget",
         });
       } else {
@@ -230,8 +230,9 @@ export default function AdminBudgetTab() {
           <span>Upload Budget PDFs</span>
         </button>
         <p className="text-sm text-slate-500 mt-2">
-          Upload PDF budget files. You'll be prompted to select property and
-          date. Property owners will be automatically notified by email.
+          Upload PDF budget files for the entire year. You'll be prompted to
+          select property and year. Property owners will be automatically
+          notified by email.
         </p>
       </div>
 
@@ -308,30 +309,15 @@ export default function AdminBudgetTab() {
                 </select>
               </div>
 
-              {/* Month Selection */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Month *
-                </label>
-                <select
-                  value={uploadModalData.month}
-                  onChange={(e) =>
-                    setUploadModalData({
-                      ...uploadModalData,
-                      month: parseInt(e.target.value),
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {Array.from({ length: 12 }, (_, i) => {
-                    const month = i + 1;
-                    return (
-                      <option key={month} value={month}>
-                        {getMonthName(month)}
-                      </option>
-                    );
-                  })}
-                </select>
+              {/* Note about yearly budgets */}
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-500 text-sm">💡</span>
+                  <p className="text-sm text-blue-700">
+                    Budget files are uploaded for the entire year and will be
+                    accessible under all months.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -377,7 +363,7 @@ export default function AdminBudgetTab() {
                     Property
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Period
+                    Year
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Size
@@ -412,7 +398,7 @@ export default function AdminBudgetTab() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                      {getMonthName(budget.month)} {budget.year}
+                      {budget.year}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {formatFileSize(budget.size)}

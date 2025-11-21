@@ -26,6 +26,9 @@ interface Message {
   property: Property;
   sender: User;
   recipient: User | null;
+  recipients?: User[];
+  recipientCount?: number;
+  groupId?: string;
 }
 
 export default function AdminMessagesTab() {
@@ -231,25 +234,31 @@ export default function AdminMessagesTab() {
                         <span className="font-medium">Property:</span>{" "}
                         {message.property.name} ({message.property.code})
                       </span>
-                      {message.recipient && (
-                        <span>
-                          <svg
-                            className="w-4 h-4 inline mr-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
-                          <span className="font-medium">To:</span>{" "}
-                          {message.recipient.name || message.recipient.username}
-                        </span>
-                      )}
+                      <span>
+                        <svg
+                          className="w-4 h-4 inline mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                        <span className="font-medium">To:</span>{" "}
+                        {message.recipients && message.recipients.length > 0
+                          ? message.recipients.length === 1
+                            ? message.recipients[0].name ||
+                              message.recipients[0].username
+                            : `${message.recipientCount} recipients`
+                          : message.recipient
+                            ? message.recipient.name ||
+                              message.recipient.username
+                            : "Unknown recipient"}
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-col sm:items-end space-y-2">
@@ -287,6 +296,23 @@ export default function AdminMessagesTab() {
                   <p className="text-slate-700 whitespace-pre-wrap leading-relaxed">
                     {message.message}
                   </p>
+                  {message.recipients && message.recipients.length > 1 && (
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <h4 className="text-sm font-medium text-slate-600 mb-2">
+                        Sent to {message.recipients.length} recipients:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {message.recipients.map((recipient, index) => (
+                          <span
+                            key={index}
+                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                          >
+                            {recipient.name || recipient.username}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))

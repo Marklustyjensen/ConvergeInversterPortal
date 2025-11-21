@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { options } from "@/app/api/auth/[...nextauth]/options.js";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/emailService";
+import { v4 as uuidv4 } from "uuid";
 
 export async function GET(request) {
   try {
@@ -52,7 +53,56 @@ export async function GET(request) {
       },
     });
 
-    return NextResponse.json(messages);
+    // Group messages by groupId to avoid showing duplicates for multi-recipient messages
+    const groupedMessages = [];
+    const seenGroups = new Set();
+
+    for (const message of messages) {
+      // If message has a groupId and we've already processed this group, skip it
+      if (message.groupId && seenGroups.has(message.groupId)) {
+        continue;
+      }
+
+      // If message has a groupId, get all recipients for display
+      if (message.groupId) {
+        seenGroups.add(message.groupId);
+
+        // Get all messages in this group to show recipient count
+        const groupMessages = await prisma.message.findMany({
+          where: { groupId: message.groupId },
+          include: {
+            recipient: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                email: true,
+              },
+            },
+          },
+        });
+
+        // Add recipient list and count to the message
+        const messageWithGroupInfo = {
+          ...message,
+          recipients: groupMessages.map((m) => m.recipient).filter(Boolean),
+          recipientCount: groupMessages.length,
+          groupId: message.groupId,
+        };
+
+        groupedMessages.push(messageWithGroupInfo);
+      } else {
+        // Single recipient message, add as-is
+        const messageWithGroupInfo = {
+          ...message,
+          recipients: message.recipient ? [message.recipient] : [],
+          recipientCount: message.recipient ? 1 : 0,
+        };
+        groupedMessages.push(messageWithGroupInfo);
+      }
+    }
+
+    return NextResponse.json(groupedMessages);
   } catch (error) {
     console.error("Error fetching messages:", error);
     return NextResponse.json(
@@ -95,6 +145,9 @@ export async function POST(request) {
 
     const createdMessages = [];
 
+    // Generate a groupId if sending to multiple recipients
+    const groupId = recipients.length > 1 ? uuidv4() : null;
+
     // Create messages for each recipient
     for (const recipient of recipients) {
       const targetUserId = recipient.userId || recipient.user.id;
@@ -106,6 +159,7 @@ export async function POST(request) {
           propertyId,
           senderId: session.user.id,
           recipientId: targetUserId,
+          groupId,
           emailNotification,
         },
         include: {

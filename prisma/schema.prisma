@@ -80,10 +80,12 @@ model Message {
   sender            User      @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
   recipientId       String?
   recipient         User?     @relation("MessageRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  groupId           String?   // Groups messages sent together to multiple recipients
   emailNotification Boolean   @default(false)
   isRead            Boolean   @default(false)
   sentDate          DateTime  @default(now())
   readDate          DateTime?
 
   @@index([propertyId, recipientId])
+  @@index([groupId])
 }

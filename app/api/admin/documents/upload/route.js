@@ -48,10 +48,11 @@ export async function POST(request) {
     }
 
     // Validate document type
-    if (!["financial", "star_report"].includes(documentType)) {
+    if (!["financial", "star_report", "budget"].includes(documentType)) {
       return NextResponse.json(
         {
-          error: "Invalid document type. Must be 'financial' or 'star_report'",
+          error:
+            "Invalid document type. Must be 'financial', 'star_report', or 'budget'",
         },
         { status: 400 }
       );
