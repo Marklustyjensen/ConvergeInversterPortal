@@ -11,6 +11,7 @@ interface ActivityItem {
 interface DashboardStats {
   totalUsers: number;
   totalProperties: number;
+  totalStates: number;
   totalInvestors: number;
   totalAdmins: number;
   recentActivity: string[];
@@ -27,6 +28,7 @@ export default function AdminOverviewTab({
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
     totalProperties: 0,
+    totalStates: 0,
     totalInvestors: 0,
     totalAdmins: 0,
     recentActivity: [],
@@ -93,7 +95,10 @@ export default function AdminOverviewTab({
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading dashboard data...</p>
       </div>
     );
@@ -112,31 +117,32 @@ export default function AdminOverviewTab({
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="luxury-card p-6">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-green-100 text-green-600">
+            <div
+              className="p-3 rounded-full"
+              style={{ backgroundColor: "#e8f5e8", color: "#5c9c45" }}
+            >
               <span className="text-2xl">🏢</span>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-slate-600">Properties</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {stats.totalProperties}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="luxury-card p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 text-blue-600">
-              <span className="text-2xl">👥</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-slate-600">Total Users</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {stats.totalUsers}
-              </p>
+            <div className="ml-4 flex-1">
+              <div className="flex justify-evenly">
+                <div className="text-center">
+                  <p className="text-sm font-medium text-slate-600">
+                    Properties
+                  </p>
+                  <p className="text-lg font-bold text-slate-900">
+                    {stats.totalProperties}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-slate-600">States</p>
+                  <p className="text-lg font-bold text-slate-900">
+                    {stats.totalStates}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -144,29 +150,33 @@ export default function AdminOverviewTab({
         <div className="luxury-card p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-purple-100 text-purple-600">
-              <span className="text-2xl">💼</span>
+              <span className="text-2xl">👥</span>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-slate-600">
-                Active Investors
-              </p>
-              <p className="text-2xl font-bold text-slate-900">
-                {stats.totalInvestors}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="luxury-card p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-orange-100 text-orange-600">
-              <span className="text-2xl">👑</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-slate-600">Admin Users</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {stats.totalAdmins}
-              </p>
+            <div className="ml-4 flex-1">
+              <div className="flex justify-evenly">
+                <div className="text-center">
+                  <p className="text-sm font-medium text-slate-600">
+                    Total Users
+                  </p>
+                  <p className="text-lg font-bold text-slate-900">
+                    {stats.totalUsers}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-slate-600">
+                    Investors
+                  </p>
+                  <p className="text-lg font-bold text-slate-900">
+                    {stats.totalInvestors}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-slate-600">Admins</p>
+                  <p className="text-lg font-bold text-slate-900">
+                    {stats.totalAdmins}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -182,21 +192,18 @@ export default function AdminOverviewTab({
             className="btn-primary flex items-center justify-center space-x-2 p-4"
             onClick={() => onQuickAction?.("users", "create")}
           >
-            <span>➕</span>
             <span>Add New User</span>
           </button>
           <button
             className="btn-primary flex items-center justify-center space-x-2 p-4"
             onClick={() => onQuickAction?.("properties", "create")}
           >
-            <span>🏢</span>
             <span>Add New Property</span>
           </button>
           <button
             className="btn-primary flex items-center justify-center space-x-2 p-4"
             onClick={() => onQuickAction?.("documents", "upload")}
           >
-            <span>📄</span>
             <span>Upload Document</span>
           </button>
         </div>
@@ -234,7 +241,10 @@ export default function AdminOverviewTab({
                     key={index}
                     className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg"
                   >
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div
+                      className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                      style={{ backgroundColor: "#5c9c45" }}
+                    ></div>
                     <div className="flex-1">
                       <p className="text-sm text-slate-700">{activity}</p>
                     </div>

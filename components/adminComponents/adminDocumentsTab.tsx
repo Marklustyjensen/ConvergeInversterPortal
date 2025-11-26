@@ -225,21 +225,6 @@ export default function AdminDocumentsTab({
     return type === "financial" ? "Financial Document" : "Star Report";
   };
 
-  const getDocumentIcon = (documentType: string) => {
-    const types: { [key: string]: { bg: string; text: string } } = {
-      financial: {
-        bg: "bg-blue-100",
-        text: "text-blue-600",
-      },
-      star_report: {
-        bg: "bg-yellow-100",
-        text: "text-yellow-600",
-      },
-    };
-
-    return types[documentType] || types.financial;
-  };
-
   const getMonthName = (month: number) => {
     const months = [
       "January",
@@ -318,7 +303,10 @@ export default function AdminDocumentsTab({
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading documents...</p>
       </div>
     );
@@ -344,7 +332,14 @@ export default function AdminDocumentsTab({
             <select
               value={selectedPropertyId || ""}
               onChange={(e) => setSelectedPropertyId(e.target.value || null)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-slate-900"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 bg-white text-slate-900"
+              style={{ "--tw-ring-color": "rgba(92, 156, 69, 0.3)" }}
+              onFocus={(e) =>
+                ((e.target as HTMLSelectElement).style.borderColor = "#5c9c45")
+              }
+              onBlur={(e) =>
+                ((e.target as HTMLSelectElement).style.borderColor = "#d1d5db")
+              }
             >
               <option value="">All Properties</option>
               {properties.map((property) => (
@@ -367,7 +362,6 @@ export default function AdminDocumentsTab({
           className="btn-primary inline-flex items-center space-x-2"
           disabled={uploading}
         >
-          <span>📤</span>
           <span>Upload Files</span>
         </button>
         <p className="text-sm text-slate-500 mt-2">
@@ -529,7 +523,10 @@ export default function AdminDocumentsTab({
         </div>
         {documentsLoading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"
+              style={{ borderBottomColor: "#5c9c45" }}
+            ></div>
             <p className="mt-4 text-slate-600">Loading documents...</p>
           </div>
         ) : years.length === 0 ? (
@@ -609,10 +606,6 @@ export default function AdminDocumentsTab({
                             {isMonthExpanded && (
                               <div className="bg-white">
                                 {monthData.documents.map((doc: Document) => {
-                                  const docTypeInfo = getDocumentIcon(
-                                    doc.documentType
-                                  );
-
                                   return (
                                     <div
                                       key={doc.id}
@@ -620,18 +613,6 @@ export default function AdminDocumentsTab({
                                     >
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                          <div
-                                            className={`p-2 rounded-lg ${docTypeInfo.bg}`}
-                                          >
-                                            <span
-                                              className={`text-sm font-medium ${docTypeInfo.text}`}
-                                            >
-                                              {doc.documentType === "financial"
-                                                ? "FIN"
-                                                : "STAR"}
-                                            </span>
-                                          </div>
-
                                           <span className="text-2xl">
                                             {getFileIcon(doc.type)}
                                           </span>
@@ -667,9 +648,12 @@ export default function AdminDocumentsTab({
                                             href={doc.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+                                            className="flex items-center space-x-2 px-3 py-1.5 text-sm rounded-md transition-colors hover:opacity-80"
+                                            style={{
+                                              color: "#5c9c45",
+                                              backgroundColor: "#e8f5e8",
+                                            }}
                                           >
-                                            <span>📥</span>
                                             <span>Download</span>
                                           </a>
                                           <button
@@ -681,7 +665,6 @@ export default function AdminDocumentsTab({
                                             }
                                             className="flex items-center space-x-2 px-3 py-1.5 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
                                           >
-                                            <span>🗑️</span>
                                             <span>Delete</span>
                                           </button>
                                         </div>

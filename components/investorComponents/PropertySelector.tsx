@@ -37,7 +37,14 @@ export default function PropertySelector({
       <select
         value={selectedPropertyId || ""}
         onChange={(e) => onPropertyChange(e.target.value || null)}
-        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-slate-900"
+        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 bg-white text-slate-900"
+        style={{ "--tw-ring-color": "rgba(92, 156, 69, 0.3)" }}
+        onFocus={(e) =>
+          ((e.target as HTMLSelectElement).style.borderColor = "#5c9c45")
+        }
+        onBlur={(e) =>
+          ((e.target as HTMLSelectElement).style.borderColor = "#d1d5db")
+        }
       >
         <option value="">All Properties</option>
         {properties.map((property) => (

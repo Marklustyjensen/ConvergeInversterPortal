@@ -46,11 +46,7 @@ export default function DocumentUploadEmail({
 }: DocumentUploadEmailProps) {
   const monthName = months[month - 1];
   const documentTypeLabel =
-    documentType === "financial"
-      ? "Financial Document"
-      : documentType === "budget"
-        ? "Budget Document"
-        : "Star Report";
+    documentType === "financial" ? "Financial Document" : "Star Report";
 
   return (
     <Html>
@@ -90,8 +86,7 @@ export default function DocumentUploadEmail({
             <strong>Document Details:</strong>
             <br />• Property: {propertyName}
             <br />• Type: {documentTypeLabel}
-            <br />• {documentType === "budget" ? "Year" : "Period"}:{" "}
-            {documentType === "budget" ? year : `${monthName} ${year}`}
+            <br />• Period: {monthName} {year}
             <br />• Count: {documentCount} document
             {documentCount > 1 ? "s" : ""}
           </Text>
@@ -165,7 +160,7 @@ const buttonContainer = {
 };
 
 const button = {
-  backgroundColor: "#3b82f6",
+  backgroundColor: "#5c9c45",
   borderRadius: "6px",
   color: "#ffffff",
   fontSize: "16px",

@@ -191,9 +191,18 @@ export default function AdminMyProfile() {
         <div
           className={`p-4 rounded-lg ${
             message.type === "success"
-              ? "bg-blue-50 text-blue-800 border border-blue-200"
+              ? "border"
               : "bg-red-50 text-red-800 border border-red-200"
           }`}
+          style={
+            message.type === "success"
+              ? {
+                  backgroundColor: "#e8f5e8",
+                  color: "#4a7c36",
+                  borderColor: "rgba(92, 156, 69, 0.3)",
+                }
+              : {}
+          }
         >
           {message.text}
         </div>
@@ -208,7 +217,8 @@ export default function AdminMyProfile() {
           {!isEditingProfile && (
             <button
               onClick={() => setIsEditingProfile(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 text-white rounded-lg transition-colors hover:opacity-90"
+              style={{ backgroundColor: "#5c9c45" }}
             >
               Edit Profile
             </button>
@@ -265,7 +275,8 @@ export default function AdminMyProfile() {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-6 py-2 text-white rounded-lg transition-colors hover:opacity-90"
+                style={{ backgroundColor: "#5c9c45" }}
               >
                 Save Changes
               </button>

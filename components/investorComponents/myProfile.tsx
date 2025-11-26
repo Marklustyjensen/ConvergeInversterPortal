@@ -190,7 +190,7 @@ export default function MyProfile() {
         <div
           className={`p-4 rounded-lg ${
             message.type === "success"
-              ? "bg-green-50 text-green-800 border border-green-200"
+              ? "bg-blue-50 text-blue-800 border border-blue-200"
               : "bg-red-50 text-red-800 border border-red-200"
           }`}
         >
@@ -207,7 +207,7 @@ export default function MyProfile() {
           {!isEditingProfile && (
             <button
               onClick={() => setIsEditingProfile(true)}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Edit Profile
             </button>
@@ -226,7 +226,7 @@ export default function MyProfile() {
                 onChange={(e) =>
                   setProfileForm({ ...profileForm, name: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your full name"
               />
             </div>
@@ -241,7 +241,7 @@ export default function MyProfile() {
                 onChange={(e) =>
                   setProfileForm({ ...profileForm, email: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email address"
               />
             </div>
@@ -264,7 +264,7 @@ export default function MyProfile() {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Save Changes
               </button>
@@ -348,7 +348,7 @@ export default function MyProfile() {
                     currentPassword: e.target.value,
                   })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your current password"
               />
             </div>
@@ -366,7 +366,7 @@ export default function MyProfile() {
                     newPassword: e.target.value,
                   })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your new password (min. 6 characters)"
               />
             </div>
@@ -384,7 +384,7 @@ export default function MyProfile() {
                     confirmPassword: e.target.value,
                   })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Confirm your new password"
               />
             </div>

@@ -17,6 +17,15 @@ export async function GET(request) {
     // Get total properties
     const totalProperties = await prisma.property.count();
 
+    // Get total unique states
+    const uniqueStates = await prisma.property.findMany({
+      select: {
+        state: true,
+      },
+      distinct: ["state"],
+    });
+    const totalStates = uniqueStates.length;
+
     // Get total investors (non-admin users)
     const totalInvestors = await prisma.user.count({
       where: {
@@ -185,6 +194,7 @@ export async function GET(request) {
     return NextResponse.json({
       totalUsers,
       totalProperties,
+      totalStates,
       totalInvestors,
       totalAdmins,
       recentActivity,

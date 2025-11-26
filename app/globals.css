@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  /* Converge Hospitality Brand Colors */
-  --primary: #686868; /* Company gray for primary elements */
-  --primary-light: #7a7a7a;
-  --primary-dark: #565656;
-  --secondary: #5c9c45; /* Company green for accents */
-  --secondary-light: #6bb051;
-  --secondary-dark: #4a8239;
-  --accent: #5c9c45; /* Use company green for growth/success */
-  --accent-light: #6bb051;
+  /* New Color Scheme - Grey & Green */
+  --primary: #686868; /* New grey for primary elements */
+  --primary-light: #808080;
+  --primary-dark: #505050;
+  --secondary: #5c9c45; /* New green for accents */
+  --secondary-light: #7bb85b;
+  --secondary-dark: #4a7c36;
+  --accent: #5c9c45; /* Use green for interactive elements */
+  --accent-light: #7bb85b;
 
   /* Neutrals */
   --background: #fafafa;
   --surface: #ffffff;
-  --surface-dark: #f5f7fa;
-  --border: #e2e8f0;
-  --text-primary: #1a202c;
-  --text-secondary: #4a5568;
-  --text-muted: #718096;
+  --surface-dark: #f8fafc;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
 
   /* Status colors */
-  --success: #5c9c45; /* Use company green for success */
-  --error: #e53e3e;
-  --warning: #d69e2e;
-  --info: #686868; /* Use company gray for info */
+  --success: #5c9c45; /* Use new green for success */
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #5c9c45; /* Use green for info */
 
   /* Shadows */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -144,27 +144,6 @@ select:focus,
 textarea:focus {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
-}
-
-/* Layout containers for responsive design */
-.app-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 3%;
-}
-
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  .app-container {
-    padding: 0 2%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .app-container {
-    padding: 0 1%;
-  }
 }
 
 /* Scrollbar styling */

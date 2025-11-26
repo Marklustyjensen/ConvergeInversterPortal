@@ -23,6 +23,7 @@ interface Document {
 export default function BudgetTab() {
   const { data: session } = useSession();
   const [expandedYears, setExpandedYears] = useState(new Set(["2025"])); // Start with 2025 expanded
+  const [expandedMonths, setExpandedMonths] = useState(new Set()); // Track expanded months
   const [properties, setProperties] = useState<Property[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -111,20 +112,49 @@ export default function BudgetTab() {
   // Filter documents based on selected property (documents are already filtered by star_report type from API)
   const filteredDocuments = documents;
 
-  // Group documents by year only (budgets are yearly documents)
-  const documentsByYear = filteredDocuments.reduce(
-    (acc: { [key: number]: Document[] }, doc) => {
+  // Group documents by year and then by month
+  const documentsByYearAndMonth = filteredDocuments.reduce(
+    (
+      acc: {
+        [key: number]: {
+          [key: string]: { monthIndex: number; documents: Document[] };
+        };
+      },
+      doc
+    ) => {
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const monthName = monthNames[doc.month - 1]; // API returns 1-based month
+
       if (!acc[doc.year]) {
-        acc[doc.year] = [];
+        acc[doc.year] = {};
       }
-      acc[doc.year].push(doc);
+      if (!acc[doc.year][monthName]) {
+        acc[doc.year][monthName] = {
+          monthIndex: doc.month - 1, // Convert to 0-based for sorting
+          documents: [],
+        };
+      }
+      acc[doc.year][monthName].documents.push(doc);
       return acc;
     },
     {}
   );
 
   // Sort years in descending order (newest first)
-  const years = Object.keys(documentsByYear).sort(
+  const years = Object.keys(documentsByYearAndMonth).sort(
     (a, b) => parseInt(b) - parseInt(a)
   );
 
@@ -138,19 +168,15 @@ export default function BudgetTab() {
     setExpandedYears(newExpandedYears);
   };
 
-  const getDocumentIcon = (documentType: string) => {
-    const types: Record<string, { bg: string; text: string }> = {
-      financial: {
-        bg: "bg-blue-100",
-        text: "text-blue-600",
-      },
-      star_report: {
-        bg: "bg-yellow-100",
-        text: "text-yellow-600",
-      },
-    };
-
-    return types[documentType] || types.star_report;
+  const toggleMonth = (year: string, month: string) => {
+    const monthKey = `${year}-${month}`;
+    const newExpandedMonths = new Set(expandedMonths);
+    if (newExpandedMonths.has(monthKey)) {
+      newExpandedMonths.delete(monthKey);
+    } else {
+      newExpandedMonths.add(monthKey);
+    }
+    setExpandedMonths(newExpandedMonths);
   };
 
   const getFileIcon = (type: string) => {
@@ -178,7 +204,10 @@ export default function BudgetTab() {
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading budgets...</p>
       </div>
     );
@@ -237,7 +266,10 @@ export default function BudgetTab() {
       <div className="luxury-card">
         {documentsLoading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"
+              style={{ borderBottomColor: "#5c9c45" }}
+            ></div>
             <p className="mt-4 text-slate-600">Loading budgets...</p>
           </div>
         ) : years.length === 0 ? (
@@ -255,8 +287,11 @@ export default function BudgetTab() {
         ) : (
           <div className="divide-y divide-slate-200">
             {years.map((year) => {
-              const yearData = documentsByYear[parseInt(year)];
+              const yearData = documentsByYearAndMonth[parseInt(year)];
               const isYearExpanded = expandedYears.has(year);
+              const monthsInYear = Object.keys(yearData).sort(
+                (a, b) => yearData[b].monthIndex - yearData[a].monthIndex
+              );
 
               return (
                 <div key={year}>
@@ -269,75 +304,108 @@ export default function BudgetTab() {
                         {isYearExpanded ? "▼" : "▶"}
                       </div>
                       <h3 className="text-lg font-semibold text-slate-800">
-                        {year} Budget
+                        {year}
                       </h3>
                     </div>
                     <div className="text-sm text-slate-500">
-                      {yearData.length} budget file
-                      {yearData.length !== 1 ? "s" : ""}
+                      {Object.values(yearData).reduce(
+                        (total, month) => total + month.documents.length,
+                        0
+                      )}{" "}
+                      documents
                     </div>
                   </button>
 
                   {isYearExpanded && (
-                    <div className="bg-white border-t border-slate-200">
-                      {yearData.map((doc) => {
+                    <div className="bg-slate-50">
+                      {monthsInYear.map((month) => {
+                        const monthData = yearData[month];
+                        const monthKey = `${year}-${month}`;
+                        const isMonthExpanded = expandedMonths.has(monthKey);
+
                         return (
                           <div
-                            key={doc.id}
-                            className="px-4 sm:px-8 py-4 border-t border-slate-100 hover:bg-slate-50 transition-colors"
+                            key={month}
+                            className="border-t border-slate-200"
                           >
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                              <div className="flex items-start space-x-3 sm:space-x-4 min-w-0 flex-1">
-                                <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-3">
-                                  <div className="p-1.5 sm:p-2 rounded-lg bg-green-100">
-                                    <span className="text-xs sm:text-sm font-medium text-green-600">
-                                      💰
-                                    </span>
-                                  </div>
-
-                                  <span className="text-xl sm:text-2xl">
-                                    {getFileIcon(doc.type)}
-                                  </span>
+                            <button
+                              onClick={() => toggleMonth(year, month)}
+                              className="w-full px-8 py-3 flex items-center justify-between hover:bg-slate-100 transition-colors"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div className="text-slate-400">
+                                  {isMonthExpanded ? "▼" : "▶"}
                                 </div>
-
-                                <div className="min-w-0 flex-1">
-                                  <h5 className="font-medium text-slate-800 truncate pr-2">
-                                    {doc.name}
-                                  </h5>
-                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-slate-500 mt-1">
-                                    <span className="whitespace-nowrap">
-                                      Budget Document
-                                    </span>
-                                    <span className="hidden sm:inline">•</span>
-                                    <span className="whitespace-nowrap">
-                                      {formatFileSize(doc.size)}
-                                    </span>
-                                    <span className="hidden sm:inline">•</span>
-                                    <span className="truncate max-w-32 sm:max-w-none">
-                                      {doc.property.name}
-                                    </span>
-                                    <span className="hidden sm:inline">•</span>
-                                    <span className="whitespace-nowrap">
-                                      {new Date(
-                                        doc.uploadDate
-                                      ).toLocaleDateString()}
-                                    </span>
-                                  </div>
-                                </div>
+                                <h4 className="font-medium text-slate-700">
+                                  {month}
+                                </h4>
                               </div>
-
-                              <div className="flex items-center space-x-3 flex-shrink-0">
-                                <a
-                                  href={doc.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center space-x-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
-                                >
-                                  <span className="hidden sm:inline">📥</span>
-                                  <span>Download</span>
-                                </a>
+                              <div className="text-sm text-slate-500">
+                                {monthData.documents.length} documents
                               </div>
-                            </div>
+                            </button>
+
+                            {isMonthExpanded && (
+                              <div className="bg-white">
+                                {monthData.documents.map((doc) => {
+                                  return (
+                                    <div
+                                      key={doc.id}
+                                      className="px-10 py-4 border-t border-slate-100 hover:bg-slate-50 transition-colors"
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-4">
+                                          <span className="text-2xl">
+                                            {getFileIcon(doc.type)}
+                                          </span>
+
+                                          <div>
+                                            <h5 className="font-medium text-slate-800">
+                                              {doc.name}
+                                            </h5>
+                                            <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                              <span>
+                                                {getDocumentTypeDisplay(
+                                                  doc.documentType
+                                                )}
+                                              </span>
+                                              <span>•</span>
+                                              <span>
+                                                {formatFileSize(doc.size)}
+                                              </span>
+                                              <span>•</span>
+                                              <span>{doc.property.name}</span>
+                                              <span>•</span>
+                                              <span>
+                                                {new Date(
+                                                  doc.uploadDate
+                                                ).toLocaleDateString()}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center space-x-3">
+                                          <a
+                                            href={doc.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center space-x-2 px-3 py-1.5 text-sm rounded-md transition-colors hover:opacity-80"
+                                            style={{
+                                              color: "#5c9c45",
+                                              backgroundColor: "#e8f5e8",
+                                            }}
+                                          >
+                                            <span>📥</span>
+                                            <span>Download</span>
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                         );
                       })}

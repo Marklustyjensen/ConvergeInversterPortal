@@ -26,9 +26,6 @@ interface Message {
   property: Property;
   sender: User;
   recipient: User | null;
-  recipients?: User[];
-  recipientCount?: number;
-  groupId?: string;
 }
 
 export default function AdminMessagesTab() {
@@ -206,10 +203,16 @@ export default function AdminMessagesTab() {
               <div
                 key={message.id}
                 className={`p-6 border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 ${
-                  message.isRead
-                    ? "bg-white border-slate-200"
-                    : "bg-blue-50 border-blue-300 shadow-md"
+                  message.isRead ? "bg-white border-slate-200" : ""
                 }`}
+                style={
+                  !message.isRead
+                    ? {
+                        backgroundColor: "#e8f5e8",
+                        borderColor: "rgba(92, 156, 69, 0.3)",
+                      }
+                    : {}
+                }
               >
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-2 sm:space-y-0">
                   <div className="flex-1">
@@ -234,37 +237,37 @@ export default function AdminMessagesTab() {
                         <span className="font-medium">Property:</span>{" "}
                         {message.property.name} ({message.property.code})
                       </span>
-                      <span>
-                        <svg
-                          className="w-4 h-4 inline mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        <span className="font-medium">To:</span>{" "}
-                        {message.recipients && message.recipients.length > 0
-                          ? message.recipients.length === 1
-                            ? message.recipients[0].name ||
-                              message.recipients[0].username
-                            : `${message.recipientCount} recipients`
-                          : message.recipient
-                            ? message.recipient.name ||
-                              message.recipient.username
-                            : "Unknown recipient"}
-                      </span>
+                      {message.recipient && (
+                        <span>
+                          <svg
+                            className="w-4 h-4 inline mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
+                          </svg>
+                          <span className="font-medium">To:</span>{" "}
+                          {message.recipient.name || message.recipient.username}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col sm:items-end space-y-2">
                     <div className="flex items-center space-x-2">
                       {message.emailNotification && (
-                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium flex items-center">
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-medium flex items-center"
+                          style={{
+                            backgroundColor: "#e8f5e8",
+                            color: "#4a7c36",
+                          }}
+                        >
                           <svg
                             className="w-3 h-3 mr-1"
                             fill="none"
@@ -282,7 +285,13 @@ export default function AdminMessagesTab() {
                         </span>
                       )}
                       {!message.isRead && (
-                        <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-medium"
+                          style={{
+                            backgroundColor: "#e8f5e8",
+                            color: "#4a7c36",
+                          }}
+                        >
                           Unread
                         </span>
                       )}
@@ -296,23 +305,6 @@ export default function AdminMessagesTab() {
                   <p className="text-slate-700 whitespace-pre-wrap leading-relaxed">
                     {message.message}
                   </p>
-                  {message.recipients && message.recipients.length > 1 && (
-                    <div className="mt-4 pt-4 border-t border-slate-200">
-                      <h4 className="text-sm font-medium text-slate-600 mb-2">
-                        Sent to {message.recipients.length} recipients:
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {message.recipients.map((recipient, index) => (
-                          <span
-                            key={index}
-                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
-                          >
-                            {recipient.name || recipient.username}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             ))

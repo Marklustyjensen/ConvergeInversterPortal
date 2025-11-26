@@ -46,28 +46,30 @@ const SignIn = () => {
           <div className="text-center mb-12">
             <div className="flex justify-center mb-8">
               <div className="relative">
-                <img
-                  src="/images/Logo.jpg"
-                  alt="Converge Hospitality Logo"
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-contain rounded-2xl shadow-lg"
-                />
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-2xl shadow-lg overflow-hidden bg-white flex items-center justify-center">
+                  <img
+                    src="/images/Logo.jpg"
+                    alt="Investment Portal Logo"
+                    className="w-full h-full object-contain p-2"
+                  />
+                </div>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent to-white/20"></div>
               </div>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
               <span className="gradient-text font-serif">
-                Converge Hospitality
+                Investment Portal
               </span>
             </h1>
 
             <div className="max-w-2xl mx-auto">
               <h2 className="text-xl sm:text-2xl lg:text-3xl text-slate-600 mb-4 font-light">
-                Investor Portal
+                Portfolio Management
               </h2>
               <p className="text-lg text-slate-500 leading-relaxed">
                 Access your investment portfolio, performance metrics, and
-                financial documents for your hospitality investments.
+                financial documents for your real estate investments.
               </p>
             </div>
           </div>
@@ -110,9 +112,13 @@ const SignIn = () => {
                   </div> */}
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <div
+                      className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: "#e8f5e8" }}
+                    >
                       <svg
-                        className="w-6 h-6 text-green-600"
+                        className="w-6 h-6"
+                        style={{ color: "#5c9c45" }}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -136,9 +142,13 @@ const SignIn = () => {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <div
+                      className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: "#e8f5e8" }}
+                    >
                       <svg
-                        className="w-6 h-6 text-green-600"
+                        className="w-6 h-6"
+                        style={{ color: "#5c9c45" }}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -193,8 +203,16 @@ const SignIn = () => {
                       required
                       placeholder="Enter your username"
                       className="w-full px-4 py-4 text-base border-2 border-slate-200 rounded-xl 
-                               focus:border-gray-500 focus:ring-0 transition-colors duration-200
+                               focus:ring-0 transition-colors duration-200
                                placeholder-slate-400 bg-white"
+                      onFocus={(e) =>
+                        ((e.target as HTMLInputElement).style.borderColor =
+                          "#686868")
+                      }
+                      onBlur={(e) =>
+                        ((e.target as HTMLInputElement).style.borderColor =
+                          "#e2e8f0")
+                      }
                       disabled={isLoading}
                     />
                   </div>
@@ -210,8 +228,16 @@ const SignIn = () => {
                       required
                       placeholder="Enter your password"
                       className="w-full px-4 py-4 text-base border-2 border-slate-200 rounded-xl 
-                               focus:border-gray-500 focus:ring-0 transition-colors duration-200
+                               focus:ring-0 transition-colors duration-200
                                placeholder-slate-400 bg-white"
+                      onFocus={(e) =>
+                        ((e.target as HTMLInputElement).style.borderColor =
+                          "#686868")
+                      }
+                      onBlur={(e) =>
+                        ((e.target as HTMLInputElement).style.borderColor =
+                          "#e2e8f0")
+                      }
                       disabled={isLoading}
                     />
                   </div>
@@ -219,7 +245,8 @@ const SignIn = () => {
                   <div className="flex justify-end">
                     <a
                       href="/forgot-password"
-                      className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                      className="text-sm transition-colors duration-200 hover:opacity-80"
+                      style={{ color: "#686868" }}
                     >
                       Forgot your password?
                     </a>
@@ -229,12 +256,15 @@ const SignIn = () => {
                     type="submit"
                     disabled={isLoading}
                     className="w-full py-4 text-base font-semibold text-white 
-                             bg-gradient-to-r from-gray-600 to-green-600 rounded-xl 
-                             hover:from-gray-700 hover:to-green-700 
-                             focus:outline-none focus:ring-4 focus:ring-gray-200
+                             rounded-xl hover:opacity-90
+                             focus:outline-none focus:ring-4
                              disabled:opacity-50 disabled:cursor-not-allowed
                              transition-all duration-200 transform hover:scale-[1.02]
                              shadow-lg hover:shadow-xl"
+                    style={{
+                      background: "linear-gradient(to right, #686868, #5c9c45)",
+                      boxShadow: "inset 0 0 0 1px rgba(92, 156, 69, 0.3)",
+                    }}
                   >
                     {isLoading ? (
                       <div className="flex items-center justify-center space-x-2">
@@ -269,9 +299,18 @@ const SignIn = () => {
                   <div
                     className={`mt-6 p-4 rounded-lg text-center font-medium ${
                       message.includes("successful")
-                        ? "bg-green-50 text-green-700 border border-green-200"
+                        ? "border"
                         : "bg-red-50 text-red-700 border border-red-200"
                     }`}
+                    style={
+                      message.includes("successful")
+                        ? {
+                            backgroundColor: "#e8f5e8",
+                            color: "#4a7c36",
+                            borderColor: "rgba(92, 156, 69, 0.3)",
+                          }
+                        : {}
+                    }
                   >
                     {message}
                   </div>
@@ -281,10 +320,11 @@ const SignIn = () => {
                   <p className="text-sm text-slate-500">
                     Need help? Contact your account manager or
                     <a
-                      href="mailto:support@convergehospitality.com"
-                      className="text-green-600 hover:text-green-700 ml-1"
+                      href="mailto:support@example.com"
+                      className="ml-1 transition-colors duration-200 hover:opacity-80"
+                      style={{ color: "#5c9c45" }}
                     >
-                      support@convergehospitality.com
+                      support@example.com
                     </a>
                   </p>
                 </div>

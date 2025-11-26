@@ -135,8 +135,11 @@ function ResetPasswordForm() {
           )}
 
           {message && (
-            <div className="rounded-md bg-green-50 p-4">
-              <div className="text-sm text-green-700">
+            <div
+              className="rounded-md p-4"
+              style={{ backgroundColor: "#e8f5e8" }}
+            >
+              <div className="text-sm" style={{ color: "#4a7c36" }}>
                 {message} Redirecting to sign in...
               </div>
             </div>
@@ -146,7 +149,11 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={isLoading || !token}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+              style={{
+                backgroundColor: "#5c9c45",
+                "--focus-ring-color": "rgba(92, 156, 69, 0.3)",
+              }}
             >
               {isLoading ? "Resetting..." : "Reset Password"}
             </button>

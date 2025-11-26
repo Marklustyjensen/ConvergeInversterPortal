@@ -41,7 +41,7 @@ export default function AdminBudgetTab() {
   const [uploadModalData, setUploadModalData] = useState<UploadModalData>({
     propertyId: "",
     year: new Date().getFullYear(),
-    month: 1, // Default to January for yearly budgets
+    month: new Date().getMonth() + 1,
     documentType: "budget",
   });
 
@@ -126,7 +126,7 @@ export default function AdminBudgetTab() {
         setUploadModalData({
           propertyId: "",
           year: new Date().getFullYear(),
-          month: 1, // Default to January for yearly budgets
+          month: new Date().getMonth() + 1,
           documentType: "budget",
         });
       } else {
@@ -200,7 +200,10 @@ export default function AdminBudgetTab() {
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading budgets...</p>
       </div>
     );
@@ -226,13 +229,11 @@ export default function AdminBudgetTab() {
           className="btn-primary inline-flex items-center space-x-2"
           disabled={uploading}
         >
-          <span>📤</span>
           <span>Upload Budget PDFs</span>
         </button>
         <p className="text-sm text-slate-500 mt-2">
-          Upload PDF budget files for the entire year. You'll be prompted to
-          select property and year. Property owners will be automatically
-          notified by email.
+          Upload PDF budget files. You'll be prompted to select property and
+          date. Property owners will be automatically notified by email.
         </p>
       </div>
 
@@ -309,15 +310,30 @@ export default function AdminBudgetTab() {
                 </select>
               </div>
 
-              {/* Note about yearly budgets */}
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                <div className="flex items-start space-x-2">
-                  <span className="text-blue-500 text-sm">💡</span>
-                  <p className="text-sm text-blue-700">
-                    Budget files are uploaded for the entire year and will be
-                    accessible under all months.
-                  </p>
-                </div>
+              {/* Month Selection */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Month *
+                </label>
+                <select
+                  value={uploadModalData.month}
+                  onChange={(e) =>
+                    setUploadModalData({
+                      ...uploadModalData,
+                      month: parseInt(e.target.value),
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {Array.from({ length: 12 }, (_, i) => {
+                    const month = i + 1;
+                    return (
+                      <option key={month} value={month}>
+                        {getMonthName(month)}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
             </div>
 
@@ -363,7 +379,7 @@ export default function AdminBudgetTab() {
                     Property
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Year
+                    Period
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Size
@@ -381,7 +397,6 @@ export default function AdminBudgetTab() {
                   <tr key={budget.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <span className="text-2xl mr-3">💰</span>
                         <div>
                           <div className="text-sm font-medium text-slate-900">
                             {budget.originalName}
@@ -398,7 +413,7 @@ export default function AdminBudgetTab() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                      {budget.year}
+                      {getMonthName(budget.month)} {budget.year}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {formatFileSize(budget.size)}
@@ -411,7 +426,8 @@ export default function AdminBudgetTab() {
                         href={budget.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-900"
+                        className="transition-colors hover:opacity-80"
+                        style={{ color: "#5c9c45" }}
                       >
                         View
                       </a>

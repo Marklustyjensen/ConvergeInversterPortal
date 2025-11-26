@@ -324,7 +324,10 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading users...</p>
       </div>
     );
@@ -364,7 +367,10 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                 placeholder="Search by name, username, or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 pl-10 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 pl-10 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent"
+                style={{ "--tw-ring-color": "#5c9c45" } as React.CSSProperties}
+                onFocus={(e) => (e.target.style.borderColor = "#5c9c45")}
+                onBlur={(e) => (e.target.style.borderColor = "")}
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
@@ -409,7 +415,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   onChange={(e) =>
                     setNewUser({ ...newUser, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2"
+                  style={
+                    { "--tw-ring-color": "#5c9c45" } as React.CSSProperties
+                  }
+                  onFocus={(e) => (e.target.style.borderColor = "#5c9c45")}
+                  onBlur={(e) => (e.target.style.borderColor = "")}
                   placeholder="Enter full name"
                 />
               </div>
@@ -423,7 +434,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   onChange={(e) =>
                     setNewUser({ ...newUser, username: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2"
+                  style={
+                    { "--tw-ring-color": "#5c9c45" } as React.CSSProperties
+                  }
+                  onFocus={(e) => (e.target.style.borderColor = "#5c9c45")}
+                  onBlur={(e) => (e.target.style.borderColor = "")}
                   placeholder="Enter username"
                   required
                 />
@@ -438,7 +454,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   onChange={(e) =>
                     setNewUser({ ...newUser, email: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2"
+                  style={
+                    { "--tw-ring-color": "#5c9c45" } as React.CSSProperties
+                  }
+                  onFocus={(e) => (e.target.style.borderColor = "#5c9c45")}
+                  onBlur={(e) => (e.target.style.borderColor = "")}
                   placeholder="Enter email"
                   required
                 />
@@ -453,7 +474,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   onChange={(e) =>
                     setNewUser({ ...newUser, password: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2"
+                  style={
+                    { "--tw-ring-color": "#5c9c45" } as React.CSSProperties
+                  }
+                  onFocus={(e) => (e.target.style.borderColor = "#5c9c45")}
+                  onBlur={(e) => (e.target.style.borderColor = "")}
                   placeholder={
                     editingUser
                       ? "Leave blank to keep current password"
@@ -475,7 +501,13 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   onChange={(e) =>
                     setNewUser({ ...newUser, admin: e.target.checked })
                   }
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                  className="h-4 w-4 border-slate-300 rounded"
+                  style={
+                    {
+                      color: "#5c9c45",
+                      "--tw-ring-color": "#5c9c45",
+                    } as React.CSSProperties
+                  }
                 />
                 <label
                   htmlFor="admin"
@@ -597,7 +629,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                         </div>
                         <button
                           onClick={() => handleAssignProperty(property.id)}
-                          className="text-green-600 hover:text-green-800 px-3 py-1 text-sm border border-green-300 rounded hover:bg-green-50"
+                          className="px-3 py-1 text-sm border rounded transition-colors hover:opacity-80"
+                          style={{
+                            color: "#5c9c45",
+                            borderColor: "#5c9c45",
+                            backgroundColor: "#e8f5e8",
+                          }}
                         >
                           Assign
                         </button>
@@ -632,9 +669,7 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
               : `All Users (${users.length})`}
           </h3>
         </div>
-
-        {/* Desktop Table View - Hidden on mobile */}
-        <div className="hidden md:block overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50">
               <tr>
@@ -675,10 +710,13 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          user.admin
-                            ? "bg-red-100 text-red-800"
-                            : "bg-green-100 text-green-800"
+                          user.admin ? "bg-red-100 text-red-800" : ""
                         }`}
+                        style={
+                          !user.admin
+                            ? { backgroundColor: "#e8f5e8", color: "#4a7c36" }
+                            : {}
+                        }
                       >
                         {user.admin ? "Administrator" : "Investor"}
                       </span>
@@ -687,25 +725,35 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                       <div className="text-sm text-slate-900">
                         {user.userProperties.length} properties
                       </div>
+                      {/* {user.userProperties.length > 0 && (
+                        <div className="text-sm text-slate-500">
+                          {user.userProperties
+                            .map((up) => up.property.name)
+                            .join(", ")}
+                        </div>
+                      )} */}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => handleEditUser(user)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="transition-colors hover:opacity-80"
+                        style={{ color: "#5c9c45" }}
                       >
                         Edit
                       </button>
                       {!user.admin && (
                         <button
                           onClick={() => openPropertyAssignModal(user)}
-                          className="text-green-600 hover:text-green-900"
+                          className="transition-colors hover:opacity-80"
+                          style={{ color: "#5c9c45" }}
                         >
                           Manage Properties
                         </button>
                       )}
                       <button
                         onClick={() => toggleAdminStatus(user.id, user.admin)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="transition-colors hover:opacity-80"
+                        style={{ color: "#5c9c45" }}
                       >
                         {user.admin ? "Remove Admin" : "Make Admin"}
                       </button>
@@ -771,119 +819,6 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
               )}
             </tbody>
           </table>
-        </div>
-
-        {/* Mobile Card View - Shown on mobile only */}
-        <div className="md:hidden divide-y divide-slate-200">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <div key={user.id} className="p-4 hover:bg-slate-50">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 className="text-sm font-medium text-slate-900">
-                        {user.name || user.username}
-                      </h4>
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                          user.admin
-                            ? "bg-red-100 text-red-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
-                      >
-                        {user.admin ? "Admin" : "Investor"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 mb-1">
-                      @{user.username}
-                    </p>
-                    <p className="text-sm text-slate-700 mb-2">{user.email}</p>
-                    <p className="text-xs text-slate-500">
-                      {user.userProperties.length} properties assigned
-                    </p>
-                  </div>
-                </div>
-
-                {/* Mobile Actions */}
-                <div className="flex flex-wrap gap-2 pt-3 border-t border-slate-100">
-                  <button
-                    onClick={() => handleEditUser(user)}
-                    className="flex-1 min-w-0 px-3 py-2 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  {!user.admin && (
-                    <button
-                      onClick={() => openPropertyAssignModal(user)}
-                      className="flex-1 min-w-0 px-3 py-2 text-xs font-medium text-green-600 bg-green-50 rounded-md hover:bg-green-100 transition-colors"
-                    >
-                      Properties
-                    </button>
-                  )}
-                  <button
-                    onClick={() => toggleAdminStatus(user.id, user.admin)}
-                    className="flex-1 min-w-0 px-3 py-2 text-xs font-medium text-purple-600 bg-purple-50 rounded-md hover:bg-purple-100 transition-colors"
-                  >
-                    {user.admin ? "Remove Admin" : "Make Admin"}
-                  </button>
-                  <button
-                    onClick={() => handleDeleteUser(user.id, user.username)}
-                    className="flex-1 min-w-0 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="p-8 text-center">
-              <div className="text-slate-500">
-                {searchTerm ? (
-                  <>
-                    <svg
-                      className="mx-auto h-12 w-12 text-slate-400 mb-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                    <p className="text-sm font-medium mb-1">
-                      No users found matching "{searchTerm}"
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      Try adjusting your search terms
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="mx-auto h-12 w-12 text-slate-400 mb-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
-                      />
-                    </svg>
-                    <p className="text-sm font-medium mb-1">No users found</p>
-                    <p className="text-xs text-slate-400">
-                      Get started by creating your first user
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

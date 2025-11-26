@@ -62,7 +62,13 @@ export default function ForgotPassword() {
               type="email"
               autoComplete="email"
               required
-              className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-0 focus:z-10 sm:text-sm"
+              onFocus={(e) =>
+                ((e.target as HTMLInputElement).style.borderColor = "#686868")
+              }
+              onBlur={(e) =>
+                ((e.target as HTMLInputElement).style.borderColor = "#d1d5db")
+              }
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -77,8 +83,13 @@ export default function ForgotPassword() {
           )}
 
           {message && (
-            <div className="rounded-md bg-green-50 p-4">
-              <div className="text-sm text-green-700">{message}</div>
+            <div
+              className="rounded-md p-4"
+              style={{ backgroundColor: "#e8f5e8" }}
+            >
+              <div className="text-sm" style={{ color: "#4a7c36" }}>
+                {message}
+              </div>
             </div>
           )}
 
@@ -86,7 +97,11 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+              style={{
+                backgroundColor: "#5c9c45",
+                "--focus-ring-color": "rgba(92, 156, 69, 0.3)",
+              }}
             >
               {isLoading ? "Sending..." : "Send Reset Link"}
             </button>
@@ -95,7 +110,8 @@ export default function ForgotPassword() {
           <div className="text-center">
             <a
               href="/api/auth/signin"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium hover:opacity-80 transition-opacity"
+              style={{ color: "#5c9c45" }}
             >
               Back to Sign In
             </a>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminHeader from "@/components/adminComponents/adminHeader";
@@ -16,20 +16,7 @@ import AdminMyProfile from "@/components/adminComponents/adminMyProfile";
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [quickAction, setQuickAction] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
-
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => {
-      if (isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [isMobileMenuOpen]);
 
   const handleQuickAction = (tabName: string, action: string) => {
     setActiveTab(tabName);
@@ -51,73 +38,60 @@ export default function AdminDashboard() {
   };
 
   return (
-    <>
-      {/* Header - Outside container for full width */}
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
       <AdminHeader onSignOut={handleSignOut} />
 
-      <div className="min-h-screen bg-slate-50">
-        {/* Navigation Tabs */}
-        <AdminMenuTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-        />
+      {/* Navigation Tabs */}
+      <AdminMenuTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* Main Content with container */}
-        <div className="app-container">
-          <main className="py-8">
-            {/* Overview Tab */}
-            {activeTab === "overview" && (
-              <AdminOverviewTab onQuickAction={handleQuickAction} />
-            )}
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <AdminOverviewTab onQuickAction={handleQuickAction} />
+        )}
 
-            {/* Users Management Tab */}
-            {activeTab === "users" && (
-              <AdminUsersTab quickAction={quickAction} />
-            )}
+        {/* Users Management Tab */}
+        {activeTab === "users" && <AdminUsersTab quickAction={quickAction} />}
 
-            {/* Properties Management Tab */}
-            {activeTab === "properties" && (
-              <AdminPropertiesTab quickAction={quickAction} />
-            )}
+        {/* Properties Management Tab */}
+        {activeTab === "properties" && (
+          <AdminPropertiesTab quickAction={quickAction} />
+        )}
 
-            {/* Documents Management Tab */}
-            {activeTab === "documents" && (
-              <AdminDocumentsTab quickAction={quickAction} />
-            )}
+        {/* Documents Management Tab */}
+        {activeTab === "documents" && (
+          <AdminDocumentsTab quickAction={quickAction} />
+        )}
 
-            {/* Budgets Management Tab */}
-            {activeTab === "budgets" && <AdminBudgetTab />}
+        {/* Budgets Management Tab */}
+        {activeTab === "budgets" && <AdminBudgetTab />}
 
-            {/* Messages Management Tab */}
-            {activeTab === "messages" && <AdminMessagesTab />}
+        {/* Messages Management Tab */}
+        {activeTab === "messages" && <AdminMessagesTab />}
 
-            {/* My Profile Tab */}
-            {activeTab === "my profile" && <AdminMyProfile />}
+        {/* My Profile Tab */}
+        {activeTab === "my profile" && <AdminMyProfile />}
 
-            {/* Placeholder for other tabs */}
-            {activeTab !== "overview" &&
-              activeTab !== "users" &&
-              activeTab !== "properties" &&
-              activeTab !== "documents" &&
-              activeTab !== "budgets" &&
-              activeTab !== "messages" &&
-              activeTab !== "my profile" && (
-                <div className="luxury-card p-8 text-center">
-                  <h2 className="text-2xl font-bold text-slate-800 mb-4">
-                    {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}{" "}
-                    Section
-                  </h2>
-                  <p className="text-slate-600">
-                    This section is under development. More features coming
-                    soon.
-                  </p>
-                </div>
-              )}
-          </main>
-        </div>
-      </div>
-    </>
+        {/* Placeholder for other tabs */}
+        {activeTab !== "overview" &&
+          activeTab !== "users" &&
+          activeTab !== "properties" &&
+          activeTab !== "documents" &&
+          activeTab !== "budgets" &&
+          activeTab !== "messages" &&
+          activeTab !== "my profile" && (
+            <div className="luxury-card p-8 text-center">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Section
+              </h2>
+              <p className="text-slate-600">
+                This section is under development. More features coming soon.
+              </p>
+            </div>
+          )}
+      </main>
+    </div>
   );
 }

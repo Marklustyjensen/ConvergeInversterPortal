@@ -179,21 +179,6 @@ export default function StarReportTab() {
     setExpandedMonths(newExpandedMonths);
   };
 
-  const getDocumentIcon = (documentType: string) => {
-    const types: Record<string, { bg: string; text: string }> = {
-      financial: {
-        bg: "bg-blue-100",
-        text: "text-blue-600",
-      },
-      star_report: {
-        bg: "bg-yellow-100",
-        text: "text-yellow-600",
-      },
-    };
-
-    return types[documentType] || types.star_report;
-  };
-
   const getFileIcon = (type: string) => {
     if (type.includes("pdf")) return "📄";
     if (type.includes("image")) return "🖼️";
@@ -219,7 +204,10 @@ export default function StarReportTab() {
   if (loading) {
     return (
       <div className="luxury-card p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto"
+          style={{ borderBottomColor: "#5c9c45" }}
+        ></div>
         <p className="mt-4 text-slate-600">Loading star reports...</p>
       </div>
     );
@@ -280,7 +268,10 @@ export default function StarReportTab() {
       <div className="luxury-card">
         {documentsLoading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"
+              style={{ borderBottomColor: "#5c9c45" }}
+            ></div>
             <p className="mt-4 text-slate-600">Loading star reports...</p>
           </div>
         ) : years.length === 0 ? (
@@ -359,62 +350,35 @@ export default function StarReportTab() {
                             {isMonthExpanded && (
                               <div className="bg-white">
                                 {monthData.documents.map((doc) => {
-                                  const docTypeInfo = getDocumentIcon(
-                                    doc.documentType
-                                  );
-
                                   return (
                                     <div
                                       key={doc.id}
-                                      className="px-4 sm:px-10 py-4 border-t border-slate-100 hover:bg-slate-50 transition-colors"
+                                      className="px-10 py-4 border-t border-slate-100 hover:bg-slate-50 transition-colors"
                                     >
-                                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                        <div className="flex items-start space-x-3 sm:space-x-4 min-w-0 flex-1">
-                                          <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-3">
-                                            <div
-                                              className={`p-1.5 sm:p-2 rounded-lg ${docTypeInfo.bg}`}
-                                            >
-                                              <span
-                                                className={`text-xs sm:text-sm font-medium ${docTypeInfo.text}`}
-                                              >
-                                                {doc.documentType ===
-                                                "financial"
-                                                  ? "FIN"
-                                                  : "STAR"}
-                                              </span>
-                                            </div>
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-4">
+                                          <span className="text-2xl">
+                                            {getFileIcon(doc.type)}
+                                          </span>
 
-                                            <span className="text-xl sm:text-2xl">
-                                              {getFileIcon(doc.type)}
-                                            </span>
-                                          </div>
-
-                                          <div className="min-w-0 flex-1">
-                                            <h5 className="font-medium text-slate-800 truncate pr-2">
+                                          <div>
+                                            <h5 className="font-medium text-slate-800">
                                               {doc.name}
                                             </h5>
-                                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-slate-500 mt-1">
-                                              <span className="whitespace-nowrap">
+                                            <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                              <span>
                                                 {getDocumentTypeDisplay(
                                                   doc.documentType
                                                 )}
                                               </span>
-                                              <span className="hidden sm:inline">
-                                                •
-                                              </span>
-                                              <span className="whitespace-nowrap">
+                                              <span>•</span>
+                                              <span>
                                                 {formatFileSize(doc.size)}
                                               </span>
-                                              <span className="hidden sm:inline">
-                                                •
-                                              </span>
-                                              <span className="truncate max-w-32 sm:max-w-none">
-                                                {doc.property.name}
-                                              </span>
-                                              <span className="hidden sm:inline">
-                                                •
-                                              </span>
-                                              <span className="whitespace-nowrap">
+                                              <span>•</span>
+                                              <span>{doc.property.name}</span>
+                                              <span>•</span>
+                                              <span>
                                                 {new Date(
                                                   doc.uploadDate
                                                 ).toLocaleDateString()}
@@ -423,16 +387,18 @@ export default function StarReportTab() {
                                           </div>
                                         </div>
 
-                                        <div className="flex items-center space-x-3 flex-shrink-0">
+                                        <div className="flex items-center space-x-3">
                                           <a
                                             href={doc.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center space-x-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap"
+                                            className="flex items-center space-x-2 px-3 py-1.5 text-sm rounded-md transition-colors hover:opacity-80"
+                                            style={{
+                                              color: "#5c9c45",
+                                              backgroundColor: "#e8f5e8",
+                                            }}
                                           >
-                                            <span className="hidden sm:inline">
-                                              📥
-                                            </span>
+                                            <span>📥</span>
                                             <span>Download</span>
                                           </a>
                                         </div>

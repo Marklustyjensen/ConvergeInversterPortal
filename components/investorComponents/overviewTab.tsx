@@ -58,6 +58,8 @@ export default function OverviewTab() {
   const [recentDocuments, setRecentDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -127,15 +129,85 @@ export default function OverviewTab() {
 
     fetchData();
   }, [session]);
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isModalOpen) {
+        closeMessageModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("keydown", handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isModalOpen]);
+
+  const markAsRead = async (messageId: string) => {
+    try {
+      const response = await fetch("/api/messages", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messageId,
+          isRead: true,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedMessage = await response.json();
+        // Update the message in the recent messages list
+        setRecentMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.id === messageId
+              ? { ...msg, isRead: true, readDate: updatedMessage.readDate }
+              : msg
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error marking message as read:", error);
+    }
+  };
+
+  const openMessageModal = (message: Message) => {
+    setSelectedMessage(message);
+    setIsModalOpen(true);
+    // Mark as read when opening
+    if (!message.isRead) {
+      markAsRead(message.id);
+    }
+  };
+
+  const closeMessageModal = () => {
+    setIsModalOpen(false);
+    setSelectedMessage(null);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="luxury-card p-4 md:p-8">
+      <div className="luxury-card p-8">
         <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+          <h2 className="text-3xl font-bold text-slate-800 mb-4">
             Welcome to Your Investment Portal
           </h2>
-          <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
             Monitor your hospitality investments, track performance, and access
             all your financial documents in one secure location. Your portfolio
             is professionally managed by the Converge Hospitality team.
@@ -144,8 +216,8 @@ export default function OverviewTab() {
       </div>
 
       {/* Properties Section */}
-      <div className="luxury-card p-4 md:p-8">
-        <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6">
+      <div className="luxury-card p-8">
+        <h3 className="text-2xl font-bold text-slate-800 mb-6">
           Your Hotel Properties
         </h3>
         {loading ? (
@@ -161,7 +233,7 @@ export default function OverviewTab() {
             <p className="text-slate-600">No properties found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {properties.map((property: Property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
@@ -170,8 +242,8 @@ export default function OverviewTab() {
       </div>
 
       {/* Recent Activity */}
-      <div className="luxury-card p-4 md:p-8">
-        <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6">
+      <div className="luxury-card p-8">
+        <h3 className="text-2xl font-bold text-slate-800 mb-6">
           Recent Activity
         </h3>
 
@@ -191,15 +263,20 @@ export default function OverviewTab() {
                   {recentMessages.map((message) => (
                     <div
                       key={message.id}
-                      className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg"
+                      className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors"
+                      onClick={() => openMessageModal(message)}
                     >
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          message.isRead ? "bg-gray-100" : "bg-blue-100"
+                          message.isRead ? "bg-gray-100" : ""
                         }`}
+                        style={
+                          !message.isRead ? { backgroundColor: "#e8f5e8" } : {}
+                        }
                       >
                         <svg
-                          className={`w-5 h-5 ${message.isRead ? "text-gray-600" : "text-blue-600"}`}
+                          className={`w-5 h-5 ${message.isRead ? "text-gray-600" : ""}`}
+                          style={!message.isRead ? { color: "#5c9c45" } : {}}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -220,7 +297,10 @@ export default function OverviewTab() {
                             {message.subject}
                           </p>
                           {!message.isRead && (
-                            <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+                            <span
+                              className="ml-2 w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: "#5c9c45" }}
+                            ></span>
                           )}
                         </div>
                         <p className="text-sm text-slate-500 truncate">
@@ -246,9 +326,12 @@ export default function OverviewTab() {
                       key={document.id}
                       className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg"
                     >
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: "#e8f5e8" }}
+                      >
                         <svg
-                          className="w-5 h-5 text-green-600"
+                          className="w-5 h-5 text-blue-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -299,6 +382,73 @@ export default function OverviewTab() {
           </div>
         )}
       </div>
+
+      {/* Message Modal */}
+      {isModalOpen && selectedMessage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={closeMessageModal}
+        >
+          <div
+            className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-6 border-b border-slate-200">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h2 className="text-xl font-bold text-slate-800 mb-2">
+                    {selectedMessage.subject}
+                  </h2>
+                  <div className="text-sm text-slate-600 space-y-1">
+                    <p>
+                      <span className="font-medium">From:</span>{" "}
+                      {selectedMessage.sender.name ||
+                        selectedMessage.sender.username}
+                    </p>
+                    <p>
+                      <span className="font-medium">Property:</span>{" "}
+                      {selectedMessage.property.name} (
+                      {selectedMessage.property.code})
+                    </p>
+                    <p>
+                      <span className="font-medium">Date:</span>{" "}
+                      {formatDate(selectedMessage.sentDate)}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={closeMessageModal}
+                  className="ml-4 text-slate-400 hover:text-slate-600 text-2xl leading-none"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6">
+              <div className="prose prose-sm max-w-none">
+                <p className="text-slate-700 whitespace-pre-wrap leading-relaxed text-base">
+                  {selectedMessage.message}
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-slate-200 bg-slate-50">
+              <div className="flex justify-end">
+                <button
+                  onClick={closeMessageModal}
+                  className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -16,15 +16,15 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Converge Hospitality - Investor Portal",
+  title: "Investment Portal - Portfolio Management",
   description:
-    "Secure access to your hospitality investment portfolio, financial documents, and performance analytics with Converge Hospitality.",
+    "Secure access to your investment portfolio, financial documents, and performance analytics.",
   keywords:
-    "hospitality investment, hotel investment, investor portal, Converge Hospitality, financial documents, investment portfolio",
-  authors: [{ name: "Converge Hospitality" }],
-  creator: "Converge Hospitality",
-  publisher: "Converge Hospitality",
-  applicationName: "Converge Hospitality Investor Portal",
+    "real estate investment, property investment, investor portal, financial documents, investment portfolio",
+  authors: [{ name: "Investment Portal" }],
+  creator: "Investment Portal",
+  publisher: "Investment Portal",
+  applicationName: "Investment Portfolio Management",
   category: "Finance",
   classification: "Investment Platform",
   robots: {
@@ -50,17 +50,17 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
-    siteName: "Converge Hospitality Investor Portal",
-    title: "Converge Hospitality - Investor Portal",
+    siteName: "Investment Portfolio Management",
+    title: "Investment Portal - Portfolio Management",
     description:
-      "Secure access to your hospitality investment portfolio and financial documents.",
+      "Secure access to your investment portfolio and financial documents.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Converge Hospitality - Investor Portal",
+    title: "Investment Portal - Portfolio Management",
     description:
-      "Secure access to your hospitality investment portfolio and financial documents.",
+      "Secure access to your investment portfolio and financial documents.",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
@@ -77,13 +77,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <head>
-        <meta name="theme-color" content="#1a365d" />
+        <meta name="theme-color" content="#686868" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta
-          name="apple-mobile-web-app-title"
-          content="Converge Hospitality"
-        />
+        <meta name="apple-mobile-web-app-title" content="Investment Portal" />
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
