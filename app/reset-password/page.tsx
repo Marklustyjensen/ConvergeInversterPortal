@@ -149,11 +149,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={isLoading || !token}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-              style={{
-                backgroundColor: "#5c9c45",
-                "--focus-ring-color": "rgba(92, 156, 69, 0.3)",
-              }}
+              className="reset-password-button group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
             >
               {isLoading ? "Resetting..." : "Reset Password"}
             </button>

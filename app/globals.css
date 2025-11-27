@@ -137,6 +137,31 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
+/* Reset password button styles */
+.reset-password-button {
+  background-color: #5c9c45 !important;
+  --focus-ring-color: rgba(92, 156, 69, 0.3);
+}
+
+.reset-password-button:focus {
+  --tw-ring-color: var(--focus-ring-color);
+}
+
+/* Admin select styles */
+.admin-property-select {
+  --tw-ring-color: rgba(92, 156, 69, 0.3);
+}
+
+/* Forgot password button styles */
+.forgot-password-button {
+  background-color: #5c9c45 !important;
+  --focus-ring-color: rgba(92, 156, 69, 0.3);
+}
+
+.forgot-password-button:focus {
+  --tw-ring-color: var(--focus-ring-color);
+}
+
 /* Focus styles for accessibility */
 input:focus,
 button:focus,
