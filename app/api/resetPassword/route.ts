@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { validatePassword } from "@/lib/passwordValidation";
 
 const prisma = new PrismaClient();
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const { token, newPassword } = await request.json();
 
@@ -14,9 +15,11 @@ export async function POST(request) {
       );
     }
 
-    if (newPassword.length < 6) {
+    // Validate password strength
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
       return NextResponse.json(
-        { error: "Password must be at least 6 characters long" },
+        { error: passwordValidation.errors.join("; ") },
         { status: 400 }
       );
     }

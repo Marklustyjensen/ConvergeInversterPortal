@@ -58,6 +58,15 @@ export async function POST(request) {
       );
     }
 
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      return NextResponse.json(
+        { error: passwordValidation.errors.join("; ") },
+        { status: 400 }
+      );
+    }
+
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {

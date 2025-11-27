@@ -2,6 +2,8 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { validatePassword } from "../../lib/passwordValidation";
+import PasswordStrengthIndicator from "../../components/PasswordStrengthIndicator";
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -34,8 +36,10 @@ function ResetPasswordForm() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.errors.join("; "));
       setIsLoading(false);
       return;
     }
@@ -87,6 +91,10 @@ function ResetPasswordForm() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Enter your new password below
           </p>
+          <div className="mt-2 text-center text-xs text-gray-500">
+            Password must be at least 8 characters long and contain: uppercase
+            letter, lowercase letter, number, and special character
+          </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -102,11 +110,12 @@ function ResetPasswordForm() {
                 autoComplete="new-password"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="New password"
+                placeholder="Enter new password (8+ chars, uppercase, lowercase, number, special char)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
               />
+              <PasswordStrengthIndicator password={password} />
             </div>
 
             <div>

@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import { options as authOptions } from "../../auth/[...nextauth]/options";
+import { validatePassword } from "@/lib/passwordValidation";
 
 const prisma = new PrismaClient();
 
 // POST - Change user password
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -23,9 +24,11 @@ export async function POST(request) {
       );
     }
 
-    if (newPassword.length < 6) {
+    // Validate password strength
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
       return NextResponse.json(
-        { error: "New password must be at least 6 characters long" },
+        { error: passwordValidation.errors.join("; ") },
         { status: 400 }
       );
     }

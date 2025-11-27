@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { validatePassword } from "../../lib/passwordValidation";
+import PasswordStrengthIndicator from "../PasswordStrengthIndicator";
 
 interface User {
   id: string;
@@ -48,6 +50,10 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
   const [creating, setCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
   const [newUser, setNewUser] = useState<NewUserForm>({
     name: "",
     username: "",
@@ -67,6 +73,11 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
       setShowCreateForm(true);
     }
   }, [quickAction]);
+
+  const showMessage = (type: "success" | "error", text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 5000);
+  };
 
   const fetchUsers = async () => {
     try {
@@ -109,6 +120,14 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
       const userData: any = { ...newUser };
       if (editingUser && !userData.password) {
         delete userData.password;
+      } else if (userData.password) {
+        // Validate password strength for new users or when changing password
+        const passwordValidation = validatePassword(userData.password);
+        if (!passwordValidation.isValid) {
+          showMessage("error", passwordValidation.errors.join("; "));
+          setCreating(false);
+          return;
+        }
       }
 
       const response = await fetch(url, {
@@ -487,10 +506,12 @@ export default function AdminUsersTab({ quickAction }: AdminUsersTabProps) {
                   }
                   required={!editingUser}
                 />
-                {editingUser && (
+                {editingUser ? (
                   <p className="text-xs text-slate-500 mt-1">
                     Leave blank to keep the current password unchanged
                   </p>
+                ) : (
+                  <PasswordStrengthIndicator password={newUser.password} />
                 )}
               </div>
               <div className="flex items-center">

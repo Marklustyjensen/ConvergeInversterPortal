@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import {
+  validatePassword,
+  getPasswordRequirementsText,
+} from "../../lib/passwordValidation";
+import PasswordStrengthIndicator from "../PasswordStrengthIndicator";
 
 interface UserProfile {
   id: string;
@@ -121,8 +126,10 @@ export default function AdminMyProfile() {
       return;
     }
 
-    if (passwordForm.newPassword.length < 6) {
-      showMessage("error", "New password must be at least 6 characters long");
+    // Validate password strength
+    const passwordValidation = validatePassword(passwordForm.newPassword);
+    if (!passwordValidation.isValid) {
+      showMessage("error", passwordValidation.errors.join("; "));
       return;
     }
 
@@ -390,8 +397,9 @@ export default function AdminMyProfile() {
                   })
                 }
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your new password (min. 6 characters)"
+                placeholder="Enter your new password"
               />
+              <PasswordStrengthIndicator password={passwordForm.newPassword} />
             </div>
 
             <div>
